@@ -3,111 +3,564 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Código Millonario - Mindset & Finanzas</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Código Millonario — Mindset & Finanzas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    body { background: linear-gradient(135deg, #0a0a0a, #1a1a2e); }
-    .gold { color: #facc15; }
-    .card-hover:hover { transform: translateY(-10px); transition: all 0.4s; }
+    :root {
+      --gold: #F5C842;
+      --gold-dark: #C9A020;
+      --gold-dim: rgba(245,200,66,0.12);
+      --gold-border: rgba(245,200,66,0.25);
+      --bg: #0C0C0E;
+      --surface: #141416;
+      --surface2: #1C1C1F;
+      --text: #F0EDE6;
+      --muted: #7A7870;
+      --green: #3DD68C;
+      --red: #F25F5C;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; display:flex; height:100vh; overflow:hidden; }
+
+    /* ─── SIDEBAR ─── */
+    #sidebar {
+      width:240px; min-width:240px; background:var(--surface); border-right:1px solid var(--gold-border);
+      display:flex; flex-direction:column; padding:28px 16px; gap:8px; z-index:10;
+    }
+    .logo { display:flex; align-items:center; gap:10px; padding:0 8px 24px; border-bottom:1px solid var(--gold-border); }
+    .logo-icon { font-size:28px; color:var(--gold); }
+    .logo-text { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; color:var(--gold); line-height:1.1; }
+    .logo-text span { display:block; font-size:11px; font-family:'Inter',sans-serif; font-weight:300; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+    nav { display:flex; flex-direction:column; gap:4px; flex:1; padding-top:8px; }
+    .nav-link {
+      display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px;
+      color:var(--muted); font-size:14px; font-weight:500; cursor:pointer; text-decoration:none;
+      transition:all 0.2s; border:1px solid transparent;
+    }
+    .nav-link i { font-size:16px; width:20px; text-align:center; }
+    .nav-link:hover { background:var(--gold-dim); color:var(--text); border-color:var(--gold-border); }
+    .nav-link.active { background:var(--gold-dim); color:var(--gold); border-color:var(--gold-border); }
+    .sidebar-bottom { margin-top:auto; padding-top:16px; border-top:1px solid var(--gold-border); }
+    .user-pill { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; }
+    .avatar { width:34px; height:34px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:13px; color:#000; }
+    .user-name { font-size:13px; font-weight:500; }
+    .user-level { font-size:11px; color:var(--muted); }
+
+    /* ─── MAIN ─── */
+    #main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    header {
+      background:var(--surface); border-bottom:1px solid var(--gold-border);
+      padding:18px 32px; display:flex; justify-content:space-between; align-items:center;
+    }
+    .page-title { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px; color:var(--gold); }
+    .header-actions { display:flex; gap:12px; align-items:center; }
+    .btn-gold {
+      background:var(--gold); color:#000; border:none; padding:9px 20px; border-radius:9px;
+      font-weight:600; font-size:13px; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-gold:hover { background:var(--gold-dark); transform:translateY(-1px); }
+    .notif { width:36px; height:36px; border-radius:9px; background:var(--surface2); border:1px solid var(--gold-border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); font-size:15px; }
+
+    /* ─── CONTENT ─── */
+    #content { flex:1; overflow-y:auto; padding:28px 32px; }
+
+    /* ─── SECTIONS ─── */
+    .section { display:none; }
+    .section.active { display:block; }
+
+    /* ─── STAT CARDS ─── */
+    .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+    .stat-card {
+      background:var(--surface); border:1px solid var(--gold-border); border-radius:16px;
+      padding:22px 22px 18px; position:relative; overflow:hidden; cursor:pointer; transition:transform 0.2s, border-color 0.2s;
+    }
+    .stat-card:hover { transform:translateY(-4px); border-color:var(--gold); }
+    .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gold); opacity:0.5; border-radius:16px 16px 0 0; }
+    .stat-label { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:10px; }
+    .stat-value { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--text); line-height:1; }
+    .stat-badge { display:inline-flex; align-items:center; gap:4px; margin-top:8px; font-size:12px; font-weight:500; padding:3px 8px; border-radius:6px; }
+    .badge-up { background:rgba(61,214,140,0.12); color:var(--green); }
+    .badge-neutral { background:var(--surface2); color:var(--muted); }
+    .stat-bar { height:3px; background:var(--surface2); border-radius:3px; margin-top:10px; }
+    .stat-fill { height:100%; border-radius:3px; background:var(--gold); transition:width 1s ease; }
+
+    /* ─── ADSENSE BANNER ─── */
+    .ad-banner {
+      background:var(--surface2); border:1px dashed var(--gold-border); border-radius:12px;
+      padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between;
+    }
+    .ad-label { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+
+    /* ─── 2-COL GRID ─── */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+    .card { background:var(--surface); border:1px solid var(--gold-border); border-radius:16px; padding:22px; }
+    .card-title { font-size:14px; font-weight:600; color:var(--gold); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+
+    /* ─── FRASE DEL DÍA ─── */
+    .frase { font-size:17px; line-height:1.6; font-style:italic; color:var(--text); border-left:3px solid var(--gold); padding-left:16px; margin-bottom:12px; }
+    .frase-autor { text-align:right; font-size:13px; color:var(--gold); font-weight:500; }
+
+    /* ─── PROGRESO FINANCIERO ─── */
+    .progress-item { margin-bottom:14px; }
+    .progress-header { display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; }
+    .progress-track { height:6px; background:var(--surface2); border-radius:6px; }
+    .progress-bar { height:100%; border-radius:6px; background:var(--gold); transition:width 1s ease; }
+
+    /* ─── VIDEOS SECTION ─── */
+    .section-intro { font-size:14px; color:var(--muted); margin-bottom:20px; }
+    .video-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+    .video-card {
+      background:var(--surface); border:1px solid var(--gold-border); border-radius:16px;
+      overflow:hidden; cursor:pointer; transition:transform 0.2s, border-color 0.2s; text-decoration:none;
+    }
+    .video-card:hover { transform:translateY(-4px); border-color:var(--gold); }
+    .video-thumb {
+      position:relative; background:var(--surface2); aspect-ratio:16/9; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .video-thumb img { width:100%; height:100%; object-fit:cover; }
+    .play-overlay {
+      position:absolute; inset:0; background:rgba(0,0,0,0.4); display:flex;
+      align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s;
+    }
+    .video-card:hover .play-overlay { opacity:1; }
+    .play-btn { width:52px; height:52px; background:var(--gold); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .play-btn i { color:#000; font-size:18px; margin-left:3px; }
+    .video-info { padding:14px 16px; }
+    .video-title { font-size:14px; font-weight:600; margin-bottom:6px; line-height:1.4; }
+    .video-meta { display:flex; justify-content:space-between; align-items:center; }
+    .video-duration { font-size:12px; color:var(--muted); }
+    .video-tag { font-size:11px; padding:3px 8px; border-radius:6px; background:var(--gold-dim); color:var(--gold); font-weight:500; }
+    .ad-banner-video { margin:20px 0; }
+
+    /* ─── MINDSET SECTION ─── */
+    .mindset-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:20px; }
+    .mindset-card {
+      background:var(--surface); border:1px solid var(--gold-border); border-radius:16px; padding:22px;
+      cursor:pointer; transition:transform 0.2s, border-color 0.2s; text-decoration:none; color:inherit; display:block;
+    }
+    .mindset-card:hover { transform:translateY(-4px); border-color:var(--gold); }
+    .mindset-icon { font-size:28px; color:var(--gold); margin-bottom:12px; }
+    .mindset-title { font-size:15px; font-weight:600; margin-bottom:6px; }
+    .mindset-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+    .habit-list { display:flex; flex-direction:column; gap:10px; }
+    .habit-item { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface2); border-radius:10px; font-size:13px; border:1px solid transparent; cursor:pointer; transition:all 0.2s; }
+    .habit-item:hover { border-color:var(--gold-border); }
+    .habit-check { width:22px; height:22px; border-radius:6px; border:1.5px solid var(--gold-border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+    .habit-item.done .habit-check { background:var(--gold); border-color:var(--gold); }
+    .habit-item.done .habit-check i { display:block; }
+    .habit-check i { display:none; font-size:11px; color:#000; }
+    .habit-item.done .habit-text { text-decoration:line-through; color:var(--muted); }
+
+    /* ─── FINANZAS SECTION ─── */
+    .fin-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
+    .fin-tool-card {
+      background:var(--surface); border:1px solid var(--gold-border); border-radius:16px; padding:20px;
+      cursor:pointer; transition:all 0.2s; text-align:center;
+    }
+    .fin-tool-card:hover { border-color:var(--gold); transform:translateY(-4px); }
+    .fin-icon { font-size:30px; color:var(--gold); margin-bottom:10px; }
+    .fin-name { font-size:14px; font-weight:600; margin-bottom:4px; }
+    .fin-sub { font-size:12px; color:var(--muted); }
+    .calculator { background:var(--surface); border:1px solid var(--gold-border); border-radius:16px; padding:24px; }
+    .calc-row { display:flex; gap:12px; margin-bottom:14px; }
+    .calc-field { flex:1; }
+    .calc-field label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .calc-field input {
+      width:100%; background:var(--surface2); border:1px solid var(--gold-border); color:var(--text);
+      border-radius:8px; padding:10px 12px; font-size:14px; font-family:'Inter',sans-serif; outline:none; transition:border-color 0.2s;
+    }
+    .calc-field input:focus { border-color:var(--gold); }
+    .calc-result { background:var(--gold-dim); border:1px solid var(--gold-border); border-radius:12px; padding:18px 20px; text-align:center; }
+    .calc-result-label { font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .calc-result-value { font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--gold); }
+
+    /* ─── SCROLLBAR ─── */
+    #content::-webkit-scrollbar { width:5px; }
+    #content::-webkit-scrollbar-track { background:transparent; }
+    #content::-webkit-scrollbar-thumb { background:var(--gold-border); border-radius:3px; }
   </style>
 </head>
-<body class="text-white min-h-screen">
+<body>
 
-  <div class="flex h-screen">
-
-    <!-- Sidebar -->
-    <div class="w-72 bg-black/90 p-6 border-r border-yellow-500/20">
-      <div class="flex items-center gap-3 mb-10">
-        <i class="fa-solid fa-coins text-4xl gold"></i>
-        <h1 class="text-3xl font-bold">Código Millonario</h1>
-      </div>
-      
-      <nav class="space-y-2">
-        <a href="#" onclick="showSection('dashboard')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10 active">
-          <i class="fa-solid fa-house"></i> Dashboard
-        </a>
-        <a href="#" onclick="showSection('mindset')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10">
-          <i class="fa-solid fa-brain"></i> Mindset Millonario
-        </a>
-        <a href="#" onclick="showSection('finanzas')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10">
-          <i class="fa-solid fa-chart-line"></i> Finanzas
-        </a>
-        <a href="#" onclick="showSection('videos')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10">
-          <i class="fa-solid fa-play"></i> Videos Poderosos
-        </a>
-      </nav>
+  <!-- ─── SIDEBAR ─── -->
+  <div id="sidebar">
+    <div class="logo">
+      <i class="fa-solid fa-coins logo-icon"></i>
+      <div class="logo-text">Código<br>Millonario <span>Mindset · Finanzas</span></div>
     </div>
-
-    <!-- Contenido Principal -->
-    <div class="flex-1 overflow-auto">
-
-      <!-- Header -->
-      <header class="bg-black/80 border-b border-yellow-500/20 p-6 flex justify-between items-center">
-        <h2 id="pageTitle" class="text-3xl font-bold">Dashboard</h2>
-        <div class="flex items-center gap-4">
-          <button onclick="actualizarProgreso()" class="bg-yellow-500 text-black px-6 py-3 rounded-xl font-semibold hover:bg-yellow-400">
-            Actualizar Progreso
-          </button>
+    <nav>
+      <a class="nav-link active" onclick="showSection('dashboard',this)">
+        <i class="fa-solid fa-house"></i> Dashboard
+      </a>
+      <a class="nav-link" onclick="showSection('mindset',this)">
+        <i class="fa-solid fa-brain"></i> Mindset Millonario
+      </a>
+      <a class="nav-link" onclick="showSection('finanzas',this)">
+        <i class="fa-solid fa-chart-line"></i> Finanzas
+      </a>
+      <a class="nav-link" onclick="showSection('videos',this)">
+        <i class="fa-solid fa-play"></i> Videos Poderosos
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-pill">
+        <div class="avatar">TU</div>
+        <div>
+          <div class="user-name">Tu Nombre</div>
+          <div class="user-level">Nivel 87 · Activo</div>
         </div>
-      </header>
+      </div>
+    </div>
+  </div>
 
-      <!-- Dashboard -->
-      <div id="dashboard" class="p-8">
+  <!-- ─── MAIN ─── -->
+  <div id="main">
+    <header>
+      <span class="page-title" id="pageTitle">Dashboard</span>
+      <div class="header-actions">
+        <div class="notif"><i class="fa-solid fa-bell"></i></div>
+        <button class="btn-gold" onclick="actualizarProgreso()"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+      </div>
+    </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div class="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/30 rounded-3xl p-8 card-hover">
-            <h3 class="text-yellow-400 text-sm">Patrimonio Estimado</h3>
-            <p class="text-5xl font-bold mt-2">$47,892</p>
-            <p class="text-green-400 text-sm mt-2">↑ 12.4% este mes</p>
+    <div id="content">
+
+      <!-- ══════════════════════════════════════
+           DASHBOARD
+      ══════════════════════════════════════ -->
+      <div class="section active" id="sec-dashboard">
+
+        <div class="stats-grid">
+          <div class="stat-card" onclick="showSection('finanzas', document.querySelector('[onclick*=finanzas]'))">
+            <div class="stat-label">Patrimonio estimado</div>
+            <div class="stat-value">$47,892</div>
+            <span class="stat-badge badge-up"><i class="fa-solid fa-arrow-up"></i> 12.4% este mes</span>
           </div>
-          
-          <div class="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/30 rounded-3xl p-8 card-hover">
-            <h3 class="text-yellow-400 text-sm">Nivel Mental</h3>
-            <p class="text-5xl font-bold mt-2">Nivel 87</p>
-            <div class="h-3 bg-gray-700 rounded-full mt-4">
-              <div class="h-3 bg-yellow-500 rounded-full w-[87%]"></div>
-            </div>
+          <div class="stat-card" onclick="showSection('mindset', document.querySelector('[onclick*=mindset]'))">
+            <div class="stat-label">Nivel mental</div>
+            <div class="stat-value">Nv. 87</div>
+            <div class="stat-bar"><div class="stat-fill" style="width:87%"></div></div>
           </div>
-          
-          <div class="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/30 rounded-3xl p-8 card-hover">
-            <h3 class="text-yellow-400 text-sm">Días Seguidos</h3>
-            <p class="text-5xl font-bold mt-2">47 <span class="text-xl">días</span></p>
-            <p class="text-sm text-gray-400">¡Sigue así, millonario!</p>
+          <div class="stat-card">
+            <div class="stat-label">Racha activa</div>
+            <div class="stat-value">47 días</div>
+            <span class="stat-badge badge-neutral"><i class="fa-solid fa-fire"></i> ¡Sigue así!</span>
           </div>
         </div>
 
-        <!-- Espacio para Anuncio AdSense (Horizontal) -->
-        <div class="my-8 bg-gray-900 border border-dashed border-gray-600 rounded-2xl p-4 text-center text-gray-500 text-sm">
-          <!-- Aquí pegarás el código de AdSense (anuncio banner) -->
-          <p class="text-xs">📍 Espacio para Google AdSense</p>
+        <!-- AdSense Banner -->
+        <div class="ad-banner">
+          <div>
+            <div class="ad-label">Publicidad</div>
+            <!-- PEGA AQUÍ TU CÓDIGO DE GOOGLE ADSENSE -->
+            <div style="font-size:13px;color:var(--muted);margin-top:2px;">Espacio reservado para Google AdSense (banner horizontal 728×90)</div>
+          </div>
+          <i class="fa-solid fa-rectangle-ad" style="color:var(--muted);font-size:22px;"></i>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="two-col">
           <!-- Frase del día -->
-          <div class="bg-slate-900/70 border border-yellow-500/20 rounded-3xl p-8">
-            <h3 class="text-xl font-semibold mb-4">💡 Frase del Día</h3>
-            <p class="italic text-lg">"La riqueza no es solo dinero, es libertad de tiempo y mente."</p>
-            <p class="text-right mt-4 text-yellow-400">- Código Millonario</p>
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-quote-left"></i> Frase del día</div>
+            <p class="frase" id="fraseTexto">"La riqueza no es solo dinero, es libertad de tiempo y mente."</p>
+            <div class="frase-autor">— Código Millonario</div>
+            <button class="btn-gold" style="margin-top:16px;font-size:12px;padding:8px 16px;" onclick="nuevaFrase()">Nueva frase</button>
           </div>
 
-          <!-- Progreso -->
-          <div class="bg-slate-900/70 border border-yellow-500/20 rounded-3xl p-8">
-            <h3 class="text-xl font-semibold mb-4">Tu Progreso Financiero</h3>
-            <div id="progreso" class="space-y-4">
-              <!-- JS lo llena -->
+          <!-- Progreso financiero -->
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-bullseye"></i> Metas financieras</div>
+            <div id="progreso">
+              <div class="progress-item">
+                <div class="progress-header"><span>Fondo de emergencia</span><span style="color:var(--gold)">68%</span></div>
+                <div class="progress-track"><div class="progress-bar" style="width:68%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Inversiones</span><span style="color:var(--gold)">42%</span></div>
+                <div class="progress-track"><div class="progress-bar" style="width:42%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Ahorro anual</span><span style="color:var(--gold)">81%</span></div>
+                <div class="progress-track"><div class="progress-bar" style="width:81%"></div></div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header"><span>Negocio propio</span><span style="color:var(--gold)">25%</span></div>
+                <div class="progress-track"><div class="progress-bar" style="width:25%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Videos destacados en dashboard -->
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-star"></i> Videos recomendados hoy</div>
+          <div class="video-grid">
+            <a class="video-card" href="https://www.youtube.com/watch?v=F9Lwr50nFzk" target="_blank" rel="noopener">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/F9Lwr50nFzk/hqdefault.jpg" alt="Video 1" onerror="this.src='https://placehold.co/480x270/1C1C1F/F5C842?text=Video'">
+                <div class="play-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">Cómo construir riqueza desde cero</div>
+                <div class="video-meta"><span class="video-duration"><i class="fa-regular fa-clock"></i> 18 min</span><span class="video-tag">Finanzas</span></div>
+              </div>
+            </a>
+            <a class="video-card" href="https://www.youtube.com/watch?v=qSSFMLroFNs" target="_blank" rel="noopener">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/qSSFMLroFNs/hqdefault.jpg" alt="Video 2" onerror="this.src='https://placehold.co/480x270/1C1C1F/F5C842?text=Video'">
+                <div class="play-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">Mentalidad millonaria en 10 hábitos</div>
+                <div class="video-meta"><span class="video-duration"><i class="fa-regular fa-clock"></i> 22 min</span><span class="video-tag">Mindset</span></div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           MINDSET
+      ══════════════════════════════════════ -->
+      <div class="section" id="sec-mindset">
+        <div class="mindset-grid">
+          <a class="mindset-card" href="https://www.youtube.com/results?search_query=mentalidad+millonaria" target="_blank" rel="noopener">
+            <div class="mindset-icon"><i class="fa-solid fa-brain"></i></div>
+            <div class="mindset-title">Reprogramación mental</div>
+            <div class="mindset-desc">Técnicas probadas para eliminar creencias limitantes y construir la mentalidad del éxito.</div>
+          </a>
+          <a class="mindset-card" href="https://www.youtube.com/results?search_query=disciplina+habitos+exito" target="_blank" rel="noopener">
+            <div class="mindset-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div class="mindset-title">Disciplina extrema</div>
+            <div class="mindset-desc">Cómo los millonarios estructuran sus días para maximizar resultados sin agotarse.</div>
+          </a>
+          <a class="mindset-card" href="https://www.youtube.com/results?search_query=visualizacion+exito+millonarios" target="_blank" rel="noopener">
+            <div class="mindset-icon"><i class="fa-solid fa-eye"></i></div>
+            <div class="mindset-title">Visualización y metas</div>
+            <div class="mindset-desc">El poder de visualizar tu éxito con claridad como palanca de acción y motivación.</div>
+          </a>
+          <a class="mindset-card" href="https://www.youtube.com/results?search_query=resiliencia+mentalidad+ganadora" target="_blank" rel="noopener">
+            <div class="mindset-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="mindset-title">Resiliencia financiera</div>
+            <div class="mindset-desc">Cómo levantarse más fuerte después de cada fracaso económico o personal.</div>
+          </a>
+        </div>
+
+        <!-- AdSense -->
+        <div class="ad-banner ad-banner-video">
+          <div>
+            <div class="ad-label">Publicidad</div>
+            <!-- PEGA AQUÍ TU CÓDIGO DE GOOGLE ADSENSE -->
+            <div style="font-size:13px;color:var(--muted);margin-top:2px;">Espacio Google AdSense</div>
+          </div>
+          <i class="fa-solid fa-rectangle-ad" style="color:var(--muted);font-size:22px;"></i>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-check-to-slot"></i> Hábitos millonarios de hoy</div>
+          <div class="habit-list" id="habitList">
+            <div class="habit-item" onclick="toggleHabit(this)">
+              <div class="habit-check"><i class="fa-solid fa-check"></i></div>
+              <span class="habit-text">Leer 20 minutos de desarrollo personal</span>
+            </div>
+            <div class="habit-item" onclick="toggleHabit(this)">
+              <div class="habit-check"><i class="fa-solid fa-check"></i></div>
+              <span class="habit-text">Revisar y ajustar metas financieras</span>
+            </div>
+            <div class="habit-item" onclick="toggleHabit(this)">
+              <div class="habit-check"><i class="fa-solid fa-check"></i></div>
+              <span class="habit-text">Practicar gratitud y visualización positiva</span>
+            </div>
+            <div class="habit-item" onclick="toggleHabit(this)">
+              <div class="habit-check"><i class="fa-solid fa-check"></i></div>
+              <span class="habit-text">Aprender algo nuevo de inversiones o negocios</span>
+            </div>
+            <div class="habit-item" onclick="toggleHabit(this)">
+              <div class="habit-check"><i class="fa-solid fa-check"></i></div>
+              <span class="habit-text">Ejercicio físico mínimo 30 minutos</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Sección Videos (Importante para AdSense) -->
-      <div id="videos" class="p-8 hidden">
-        <h2 class="text-3xl font-bold mb-8">Videos que Cambian tu Mindset</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="videoGrid">
-          <!-- Videos se cargan con JS -->
+      <!-- ══════════════════════════════════════
+           FINANZAS
+      ══════════════════════════════════════ -->
+      <div class="section" id="sec-finanzas">
+        <div class="fin-grid">
+          <a class="fin-tool-card" href="https://www.youtube.com/results?search_query=como+invertir+en+acciones+principiantes" target="_blank" rel="noopener">
+            <div class="fin-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="fin-name">Inversión en bolsa</div>
+            <div class="fin-sub">Guías para principiantes</div>
+          </a>
+          <a class="fin-tool-card" href="https://www.youtube.com/results?search_query=bienes+raices+inversion+colombia" target="_blank" rel="noopener">
+            <div class="fin-icon"><i class="fa-solid fa-building"></i></div>
+            <div class="fin-name">Bienes raíces</div>
+            <div class="fin-sub">Cómo invertir con poco</div>
+          </a>
+          <a class="fin-tool-card" href="https://www.youtube.com/results?search_query=como+crear+negocio+online+desde+cero" target="_blank" rel="noopener">
+            <div class="fin-icon"><i class="fa-solid fa-store"></i></div>
+            <div class="fin-name">Negocio online</div>
+            <div class="fin-sub">De 0 a ingresos digitales</div>
+          </a>
+          <a class="fin-tool-card" href="https://www.youtube.com/results?search_query=presupuesto+personal+ahorro" target="_blank" rel="noopener">
+            <div class="fin-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+            <div class="fin-name">Presupuesto personal</div>
+            <div class="fin-sub">Controla cada peso</div>
+          </a>
+          <a class="fin-tool-card" href="https://www.youtube.com/results?search_query=criptomonedas+para+principiantes" target="_blank" rel="noopener">
+            <div class="fin-icon"><i class="fa-brands fa-bitcoin"></i></div>
+            <div class="fin-name">Criptomonedas</div>
+            <div class="fin-sub">Aprende antes de invertir</div>
+          </a>
+          <a class="fin-tool-card" href="https://www.youtube.com/results?search_query=flujo+de+caja+pasivos+ingresos" target="_blank" rel="noopener">
+            <div class="fin-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="fin-name">Ingresos pasivos</div>
+            <div class="fin-sub">Dinero mientras duermes</div>
+          </a>
+        </div>
+
+        <!-- AdSense -->
+        <div class="ad-banner ad-banner-video">
+          <div>
+            <div class="ad-label">Publicidad</div>
+            <!-- PEGA AQUÍ TU CÓDIGO DE GOOGLE ADSENSE -->
+            <div style="font-size:13px;color:var(--muted);margin-top:2px;">Espacio Google AdSense</div>
+          </div>
+          <i class="fa-solid fa-rectangle-ad" style="color:var(--muted);font-size:22px;"></i>
+        </div>
+
+        <!-- Calculadora de interés compuesto -->
+        <div class="calculator">
+          <div class="card-title" style="margin-bottom:20px;"><i class="fa-solid fa-calculator"></i> Calculadora de interés compuesto</div>
+          <div class="calc-row">
+            <div class="calc-field">
+              <label>Capital inicial ($)</label>
+              <input type="number" id="capital" value="1000" oninput="calcular()">
+            </div>
+            <div class="calc-field">
+              <label>Aporte mensual ($)</label>
+              <input type="number" id="aporte" value="100" oninput="calcular()">
+            </div>
+          </div>
+          <div class="calc-row">
+            <div class="calc-field">
+              <label>Tasa anual (%)</label>
+              <input type="number" id="tasa" value="12" oninput="calcular()">
+            </div>
+            <div class="calc-field">
+              <label>Años</label>
+              <input type="number" id="anos" value="10" oninput="calcular()">
+            </div>
+          </div>
+          <div class="calc-result">
+            <div class="calc-result-label">Tu patrimonio final sería</div>
+            <div class="calc-result-value" id="resultadoCalc">$23,234</div>
+          </div>
         </div>
       </div>
 
-      <!-- Otras secciones (Mindset y Finanzas) -->
-      <div id="mindset" class
+      <!-- ══════════════════════════════════════
+           VIDEOS
+      ══════════════════════════════════════ -->
+      <div class="section" id="sec-videos">
+        <p class="section-intro">Videos cuidadosamente seleccionados para transformar tu mentalidad y tus finanzas.</p>
+
+        <!-- AdSense top -->
+        <div class="ad-banner ad-banner-video">
+          <div>
+            <div class="ad-label">Publicidad</div>
+            <!-- PEGA AQUÍ TU CÓDIGO DE GOOGLE ADSENSE -->
+            <div style="font-size:13px;color:var(--muted);margin-top:2px;">Espacio Google AdSense</div>
+          </div>
+          <i class="fa-solid fa-rectangle-ad" style="color:var(--muted);font-size:22px;"></i>
+        </div>
+
+        <div class="video-grid" id="videoGrid"></div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <script>
+    const frases = [
+      { texto: '"La riqueza no es solo dinero, es libertad de tiempo y mente."', autor: 'Código Millonario' },
+      { texto: '"Cada peso ahorrado es un soldado trabajando por tu libertad."', autor: 'Warren Buffett' },
+      { texto: '"Los ricos invierten en activos. Los pobres en pasivos. Los que luchan, en gastos."', autor: 'Robert Kiyosaki' },
+      { texto: '"No es cuánto ganas, sino cuánto conservas y haces trabajar por ti."', autor: 'Código Millonario' },
+      { texto: '"El éxito llega cuando la preparación encuentra a la oportunidad."', autor: 'Séneca' }
+    ];
+    let fraseIdx = 0;
+    function nuevaFrase() {
+      fraseIdx = (fraseIdx + 1) % frases.length;
+      const f = frases[fraseIdx];
+      document.getElementById('fraseTexto').textContent = f.texto;
+      document.querySelector('.frase-autor').textContent = '— ' + f.autor;
+    }
+
+    const videos = [
+      { titulo: 'Cómo construir riqueza desde cero', url: 'https://www.youtube.com/watch?v=F9Lwr50nFzk', thumb: 'https://img.youtube.com/vi/F9Lwr50nFzk/hqdefault.jpg', dur: '18 min', tag: 'Finanzas' },
+      { titulo: 'Mentalidad millonaria en 10 hábitos', url: 'https://www.youtube.com/watch?v=qSSFMLroFNs', thumb: 'https://img.youtube.com/vi/qSSFMLroFNs/hqdefault.jpg', dur: '22 min', tag: 'Mindset' },
+      { titulo: 'El secreto del interés compuesto', url: 'https://www.youtube.com/results?search_query=interes+compuesto+como+funciona', thumb: 'https://img.youtube.com/vi/tSXTVF6xSqk/hqdefault.jpg', dur: '15 min', tag: 'Finanzas' },
+      { titulo: 'Cómo invertir tu primer millón', url: 'https://www.youtube.com/results?search_query=como+invertir+primer+millon', thumb: 'https://img.youtube.com/vi/ZxkAQS0tGao/hqdefault.jpg', dur: '25 min', tag: 'Inversión' },
+      { titulo: 'Disciplina: la clave del éxito', url: 'https://www.youtube.com/results?search_query=disciplina+exito+motivacion', thumb: 'https://img.youtube.com/vi/Jng_9VNj4vo/hqdefault.jpg', dur: '12 min', tag: 'Mindset' },
+      { titulo: 'Ingresos pasivos para principiantes', url: 'https://www.youtube.com/results?search_query=ingresos+pasivos+principiantes', thumb: 'https://img.youtube.com/vi/o5ZZFL3rppY/hqdefault.jpg', dur: '20 min', tag: 'Inversión' },
+    ];
+
+    function cargarVideos() {
+      const g = document.getElementById('videoGrid');
+      g.innerHTML = '';
+      videos.forEach(v => {
+        g.innerHTML += `
+          <a class="video-card" href="${v.url}" target="_blank" rel="noopener">
+            <div class="video-thumb">
+              <img src="${v.thumb}" alt="${v.titulo}" onerror="this.src='https://placehold.co/480x270/1C1C1F/F5C842?text=Video'">
+              <div class="play-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
+            </div>
+            <div class="video-info">
+              <div class="video-title">${v.titulo}</div>
+              <div class="video-meta"><span class="video-duration"><i class="fa-regular fa-clock"></i> ${v.dur}</span><span class="video-tag">${v.tag}</span></div>
+            </div>
+          </a>`;
+      });
+    }
+
+    const titles = { dashboard:'Dashboard', mindset:'Mindset Millonario', finanzas:'Finanzas', videos:'Videos Poderosos' };
+    function showSection(id, el) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + id).classList.add('active');
+      document.getElementById('pageTitle').textContent = titles[id];
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      if (el && el.classList) el.classList.add('active');
+    }
+
+    function toggleHabit(el) {
+      el.classList.toggle('done');
+    }
+
+    function actualizarProgreso() {
+      const bars = document.querySelectorAll('#progreso .progress-bar');
+      bars.forEach(b => {
+        const v = Math.floor(Math.random() * 40 + 50);
+        b.style.width = v + '%';
+        b.parentElement.previousElementSibling.querySelector('span:last-child').textContent = v + '%';
+      });
+    }
+
+    function calcular() {
+      const C = parseFloat(document.getElementById('capital').value) || 0;
+      const A = parseFloat(document.getElementById('aporte').value) || 0;
+      const r = (parseFloat(document.getElementById('tasa').value) || 0) / 100 / 12;
+      const n = (parseFloat(document.getElementById('anos').value) || 0) * 12;
+      let total = C * Math.pow(1 + r, n);
+      if (r > 0) total += A * (Math.pow(1 + r, n) - 1) / r;
+      document.getElementById('resultadoCalc').textContent = '$' + Math.round(total).toLocaleString('es-CO');
+    }
+
+    cargarVideos();
+    calcular();
+  </script>
+</body>
+</html>
