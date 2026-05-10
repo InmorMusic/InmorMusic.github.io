@@ -3,118 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mis Enlaces Rápidos</title>
+  <title>Código Millonario - Mindset & Finanzas</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    body { background: linear-gradient(135deg, #0f172a, #1e2937); }
-    .card { transition: all 0.3s; }
-    .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3); }
+    body { background: linear-gradient(135deg, #0a0a0a, #1a1a2e); }
+    .gold { color: #facc15; }
+    .card-hover:hover { transform: translateY(-10px); transition: all 0.4s; }
   </style>
 </head>
-<body class="min-h-screen text-white">
-  <div class="max-w-6xl mx-auto p-6">
-    <!-- Header -->
-    <div class="text-center mb-10 mt-8">
-      <h1 class="text-5xl font-bold mb-3">🔗 Mis Enlaces</h1>
-      <p class="text-xl text-slate-300">Accede rápido a tus sitios favoritos</p>
+<body class="text-white min-h-screen">
+
+  <div class="flex h-screen">
+
+    <!-- Sidebar -->
+    <div class="w-72 bg-black/90 p-6 border-r border-yellow-500/20">
+      <div class="flex items-center gap-3 mb-10">
+        <i class="fa-solid fa-coins text-4xl gold"></i>
+        <h1 class="text-3xl font-bold">Código Millonario</h1>
+      </div>
+      
+      <nav class="space-y-2">
+        <a href="#" onclick="showSection('dashboard')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10 active">
+          <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+        <a href="#" onclick="showSection('mindset')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10">
+          <i class="fa-solid fa-brain"></i> Mindset Millonario
+        </a>
+        <a href="#" onclick="showSection('finanzas')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10">
+          <i class="fa-solid fa-chart-line"></i> Finanzas
+        </a>
+        <a href="#" onclick="showSection('videos')" class="flex items-center gap-3 p-4 rounded-xl hover:bg-yellow-500/10">
+          <i class="fa-solid fa-play"></i> Videos Poderosos
+        </a>
+      </nav>
     </div>
 
-    <!-- Buscador -->
-    <div class="max-w-md mx-auto mb-10">
-      <input 
-        type="text" 
-        id="searchInput"
-        placeholder="Buscar enlaces..." 
-        class="w-full px-5 py-4 bg-slate-800 border border-slate-700 rounded-2xl focus:outline-none focus:border-blue-500 text-lg">
-    </div>
+    <!-- Contenido Principal -->
+    <div class="flex-1 overflow-auto">
 
-    <!-- Contenido -->
-    <div id="linksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Aquí se agregan los enlaces automáticamente -->
-    </div>
-  </div>
+      <!-- Header -->
+      <header class="bg-black/80 border-b border-yellow-500/20 p-6 flex justify-between items-center">
+        <h2 id="pageTitle" class="text-3xl font-bold">Dashboard</h2>
+        <div class="flex items-center gap-4">
+          <button onclick="actualizarProgreso()" class="bg-yellow-500 text-black px-6 py-3 rounded-xl font-semibold hover:bg-yellow-400">
+            Actualizar Progreso
+          </button>
+        </div>
+      </header>
 
-  <script>
-    // ==================== AGREGAR TUS ENLACES AQUÍ ====================
-    const enlaces = [
-      {
-        titulo: "YouTube",
-        descripcion: "Videos y música",
-        url: "https://youtube.com",
-        icono: "fab fa-youtube"
-      },
-      {
-        titulo: "Google",
-        descripcion: "Buscador principal",
-        url: "https://google.com",
-        icono: "fab fa-google"
-      },
-      {
-        titulo: "Gmail",
-        descripcion: "Correo electrónico",
-        url: "https://gmail.com",
-        icono: "fas fa-envelope"
-      },
-      {
-        titulo: "ChatGPT",
-        descripcion: "Inteligencia Artificial",
-        url: "https://chat.openai.com",
-        icono: "fas fa-robot"
-      },
-      {
-        titulo: "Netflix",
-        descripcion: "Series y películas",
-        url: "https://netflix.com",
-        icono: "fas fa-film"
-      },
-      {
-        titulo: "Wikipedia",
-        descripcion: "Enciclopedia libre",
-        url: "https://es.wikipedia.org",
-        icono: "fab fa-wikipedia-w"
-      },
-      // Agrega más aquí siguiendo el mismo formato
-    ];
+      <!-- Dashboard -->
+      <div id="dashboard" class="p-8">
 
-    // Renderizar enlaces
-    function renderizarEnlaces(filtrados = enlaces) {
-      const container = document.getElementById('linksContainer');
-      container.innerHTML = '';
-
-      filtrados.forEach(enlace => {
-        const card = document.createElement('a');
-        card.href = enlace.url;
-        card.target = "_blank";
-        card.className = "card block bg-slate-800 border border-slate-700 rounded-3xl p-6 hover:border-blue-500";
-        
-        card.innerHTML = `
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-slate-700 rounded-2xl flex items-center justify-center text-3xl">
-              <i class="${enlace.icono}"></i>
-            </div>
-            <div>
-              <h3 class="text-2xl font-semibold mb-1">${enlace.titulo}</h3>
-              <p class="text-slate-400">${enlace.descripcion}</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div class="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/30 rounded-3xl p-8 card-hover">
+            <h3 class="text-yellow-400 text-sm">Patrimonio Estimado</h3>
+            <p class="text-5xl font-bold mt-2">$47,892</p>
+            <p class="text-green-400 text-sm mt-2">↑ 12.4% este mes</p>
+          </div>
+          
+          <div class="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/30 rounded-3xl p-8 card-hover">
+            <h3 class="text-yellow-400 text-sm">Nivel Mental</h3>
+            <p class="text-5xl font-bold mt-2">Nivel 87</p>
+            <div class="h-3 bg-gray-700 rounded-full mt-4">
+              <div class="h-3 bg-yellow-500 rounded-full w-[87%]"></div>
             </div>
           </div>
-        `;
-        container.appendChild(card);
-      });
-    }
+          
+          <div class="bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/30 rounded-3xl p-8 card-hover">
+            <h3 class="text-yellow-400 text-sm">Días Seguidos</h3>
+            <p class="text-5xl font-bold mt-2">47 <span class="text-xl">días</span></p>
+            <p class="text-sm text-gray-400">¡Sigue así, millonario!</p>
+          </div>
+        </div>
 
-    // Buscador
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const texto = e.target.value.toLowerCase();
-      const filtrados = enlaces.filter(enlace => 
-        enlace.titulo.toLowerCase().includes(texto) || 
-        enlace.descripcion.toLowerCase().includes(texto)
-      );
-      renderizarEnlaces(filtrados);
-    });
+        <!-- Espacio para Anuncio AdSense (Horizontal) -->
+        <div class="my-8 bg-gray-900 border border-dashed border-gray-600 rounded-2xl p-4 text-center text-gray-500 text-sm">
+          <!-- Aquí pegarás el código de AdSense (anuncio banner) -->
+          <p class="text-xs">📍 Espacio para Google AdSense</p>
+        </div>
 
-    // Cargar enlaces al iniciar
-    renderizarEnlaces();
-  </script>
-</body>
-</html>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Frase del día -->
+          <div class="bg-slate-900/70 border border-yellow-500/20 rounded-3xl p-8">
+            <h3 class="text-xl font-semibold mb-4">💡 Frase del Día</h3>
+            <p class="italic text-lg">"La riqueza no es solo dinero, es libertad de tiempo y mente."</p>
+            <p class="text-right mt-4 text-yellow-400">- Código Millonario</p>
+          </div>
+
+          <!-- Progreso -->
+          <div class="bg-slate-900/70 border border-yellow-500/20 rounded-3xl p-8">
+            <h3 class="text-xl font-semibold mb-4">Tu Progreso Financiero</h3>
+            <div id="progreso" class="space-y-4">
+              <!-- JS lo llena -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Videos (Importante para AdSense) -->
+      <div id="videos" class="p-8 hidden">
+        <h2 class="text-3xl font-bold mb-8">Videos que Cambian tu Mindset</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="videoGrid">
+          <!-- Videos se cargan con JS -->
+        </div>
+      </div>
+
+      <!-- Otras secciones (Mindset y Finanzas) -->
+      <div id="mindset" class
