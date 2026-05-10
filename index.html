@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Enlaces Rápidos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { background: linear-gradient(135deg, #0f172a, #1e2937); }
+    .card { transition: all 0.3s; }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3); }
+  </style>
+</head>
+<body class="min-h-screen text-white">
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- Header -->
+    <div class="text-center mb-10 mt-8">
+      <h1 class="text-5xl font-bold mb-3">🔗 Mis Enlaces</h1>
+      <p class="text-xl text-slate-300">Accede rápido a tus sitios favoritos</p>
+    </div>
+
+    <!-- Buscador -->
+    <div class="max-w-md mx-auto mb-10">
+      <input 
+        type="text" 
+        id="searchInput"
+        placeholder="Buscar enlaces..." 
+        class="w-full px-5 py-4 bg-slate-800 border border-slate-700 rounded-2xl focus:outline-none focus:border-blue-500 text-lg">
+    </div>
+
+    <!-- Contenido -->
+    <div id="linksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Aquí se agregan los enlaces automáticamente -->
+    </div>
+  </div>
+
+  <script>
+    // ==================== AGREGAR TUS ENLACES AQUÍ ====================
+    const enlaces = [
+      {
+        titulo: "YouTube",
+        descripcion: "Videos y música",
+        url: "https://youtube.com",
+        icono: "fab fa-youtube"
+      },
+      {
+        titulo: "Google",
+        descripcion: "Buscador principal",
+        url: "https://google.com",
+        icono: "fab fa-google"
+      },
+      {
+        titulo: "Gmail",
+        descripcion: "Correo electrónico",
+        url: "https://gmail.com",
+        icono: "fas fa-envelope"
+      },
+      {
+        titulo: "ChatGPT",
+        descripcion: "Inteligencia Artificial",
+        url: "https://chat.openai.com",
+        icono: "fas fa-robot"
+      },
+      {
+        titulo: "Netflix",
+        descripcion: "Series y películas",
+        url: "https://netflix.com",
+        icono: "fas fa-film"
+      },
+      {
+        titulo: "Wikipedia",
+        descripcion: "Enciclopedia libre",
+        url: "https://es.wikipedia.org",
+        icono: "fab fa-wikipedia-w"
+      },
+      // Agrega más aquí siguiendo el mismo formato
+    ];
+
+    // Renderizar enlaces
+    function renderizarEnlaces(filtrados = enlaces) {
+      const container = document.getElementById('linksContainer');
+      container.innerHTML = '';
+
+      filtrados.forEach(enlace => {
+        const card = document.createElement('a');
+        card.href = enlace.url;
+        card.target = "_blank";
+        card.className = "card block bg-slate-800 border border-slate-700 rounded-3xl p-6 hover:border-blue-500";
+        
+        card.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-slate-700 rounded-2xl flex items-center justify-center text-3xl">
+              <i class="${enlace.icono}"></i>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold mb-1">${enlace.titulo}</h3>
+              <p class="text-slate-400">${enlace.descripcion}</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Buscador
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const texto = e.target.value.toLowerCase();
+      const filtrados = enlaces.filter(enlace => 
+        enlace.titulo.toLowerCase().includes(texto) || 
+        enlace.descripcion.toLowerCase().includes(texto)
+      );
+      renderizarEnlaces(filtrados);
+    });
+
+    // Cargar enlaces al iniciar
+    renderizarEnlaces();
+  </script>
+</body>
+</html>
